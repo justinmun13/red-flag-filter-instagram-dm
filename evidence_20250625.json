@@ -1,0 +1,176 @@
+{
+  "evidence_entries": [
+    {
+      "timestamp": "2025-06-25T20:20:01.076478",
+      "sender": "crypto_scammer_demo",
+      "message_id": "sim_msg_1750897201_001",
+      "thread_id": "sim_thread_001",
+      "message_text": "Hey gorgeous! You're absolutely perfect! I have this incredible crypto investment opportunity that will make us both millionaires. I just need you to send me $3000 today and I'll turn it into $100,000 by next week. Send it to my Bitcoin wallet: 1A2B3C4D5E6F. We're soulmates baby, trust me! What's your bank account info so I can send you the profits?",
+      "risk_level": "critical",
+      "red_flags": [
+        {
+          "category": "financial_scams_money_requests",
+          "explanation": "Potential financial scam or money request",
+          "confidence": 0.8
+        }
+      ],
+      "actions_taken": [
+        "safety_warning_sent",
+        "evidence_saved"
+      ]
+    },
+    {
+      "timestamp": "2025-06-25T20:20:01.112443",
+      "sender": "aggressive_user_demo",
+      "message_id": "sim_msg_1750897201_002",
+      "thread_id": "sim_thread_002",
+      "message_text": "Why the hell aren't you responding to me? You're being a total bitch! I've been nothing but nice to you and this is how you treat me? You'll regret ignoring me. I know where you work and I'll find you.",
+      "risk_level": "critical",
+      "red_flags": [
+        {
+          "category": "aggressive_language_threats",
+          "explanation": "Threatening or aggressive language",
+          "confidence": 0.8
+        },
+        {
+          "category": "aggressive_language_threats",
+          "explanation": "Threatening or aggressive language",
+          "confidence": 0.8
+        }
+      ],
+      "actions_taken": [
+        "safety_warning_sent",
+        "evidence_saved"
+      ]
+    },
+    {
+      "timestamp": "2025-06-25T20:20:31.181797",
+      "sender": "crypto_scammer_demo",
+      "message_id": "sim_msg_1750897231_001",
+      "thread_id": "sim_thread_001",
+      "message_text": "Hey gorgeous! You're absolutely perfect! I have this incredible crypto investment opportunity that will make us both millionaires. I just need you to send me $3000 today and I'll turn it into $100,000 by next week. Send it to my Bitcoin wallet: 1A2B3C4D5E6F. We're soulmates baby, trust me! What's your bank account info so I can send you the profits?",
+      "risk_level": "critical",
+      "red_flags": [
+        {
+          "category": "financial_scams_money_requests",
+          "explanation": "Potential financial scam or money request",
+          "confidence": 0.8
+        }
+      ],
+      "actions_taken": [
+        "safety_warning_sent",
+        "evidence_saved"
+      ]
+    },
+    {
+      "timestamp": "2025-06-25T20:20:31.263950",
+      "sender": "aggressive_user_demo",
+      "message_id": "sim_msg_1750897231_002",
+      "thread_id": "sim_thread_002",
+      "message_text": "Why the hell aren't you responding to me? You're being a total bitch! I've been nothing but nice to you and this is how you treat me? You'll regret ignoring me. I know where you work and I'll find you.",
+      "risk_level": "critical",
+      "red_flags": [
+        {
+          "category": "aggressive_language_threats",
+          "explanation": "Threatening or aggressive language",
+          "confidence": 0.8
+        },
+        {
+          "category": "aggressive_language_threats",
+          "explanation": "Threatening or aggressive language",
+          "confidence": 0.8
+        }
+      ],
+      "actions_taken": [
+        "safety_warning_sent",
+        "evidence_saved"
+      ]
+    },
+    {
+      "timestamp": "2025-06-25T20:21:01.324813",
+      "sender": "crypto_scammer_demo",
+      "message_id": "sim_msg_1750897261_001",
+      "thread_id": "sim_thread_001",
+      "message_text": "Hey gorgeous! You're absolutely perfect! I have this incredible crypto investment opportunity that will make us both millionaires. I just need you to send me $3000 today and I'll turn it into $100,000 by next week. Send it to my Bitcoin wallet: 1A2B3C4D5E6F. We're soulmates baby, trust me! What's your bank account info so I can send you the profits?",
+      "risk_level": "critical",
+      "red_flags": [
+        {
+          "category": "financial_scams_money_requests",
+          "explanation": "Potential financial scam or money request",
+          "confidence": 0.8
+        }
+      ],
+      "actions_taken": [
+        "safety_warning_sent",
+        "evidence_saved"
+      ]
+    },
+    {
+      "timestamp": "2025-06-25T20:21:01.357402",
+      "sender": "aggressive_user_demo",
+      "message_id": "sim_msg_1750897261_002",
+      "thread_id": "sim_thread_002",
+      "message_text": "Why the hell aren't you responding to me? You're being a total bitch! I've been nothing but nice to you and this is how you treat me? You'll regret ignoring me. I know where you work and I'll find you.",
+      "risk_level": "critical",
+      "red_flags": [
+        {
+          "category": "aggressive_language_threats",
+          "explanation": "Threatening or aggressive language",
+          "confidence": 0.8
+        },
+        {
+          "category": "aggressive_language_threats",
+          "explanation": "Threatening or aggressive language",
+          "confidence": 0.8
+        }
+      ],
+      "actions_taken": [
+        "safety_warning_sent",
+        "evidence_saved"
+      ]
+    },
+    {
+      "timestamp": "2025-06-25T20:21:31.405011",
+      "sender": "crypto_scammer_demo",
+      "message_id": "sim_msg_1750897291_001",
+      "thread_id": "sim_thread_001",
+      "message_text": "Hey gorgeous! You're absolutely perfect! I have this incredible crypto investment opportunity that will make us both millionaires. I just need you to send me $3000 today and I'll turn it into $100,000 by next week. Send it to my Bitcoin wallet: 1A2B3C4D5E6F. We're soulmates baby, trust me! What's your bank account info so I can send you the profits?",
+      "risk_level": "critical",
+      "red_flags": [
+        {
+          "category": "financial_scams_money_requests",
+          "explanation": "Potential financial scam or money request",
+          "confidence": 0.8
+        }
+      ],
+      "actions_taken": [
+        "safety_warning_sent",
+        "evidence_saved"
+      ]
+    },
+    {
+      "timestamp": "2025-06-25T20:21:31.434876",
+      "sender": "aggressive_user_demo",
+      "message_id": "sim_msg_1750897291_002",
+      "thread_id": "sim_thread_002",
+      "message_text": "Why the hell aren't you responding to me? You're being a total bitch! I've been nothing but nice to you and this is how you treat me? You'll regret ignoring me. I know where you work and I'll find you.",
+      "risk_level": "critical",
+      "red_flags": [
+        {
+          "category": "aggressive_language_threats",
+          "explanation": "Threatening or aggressive language",
+          "confidence": 0.8
+        },
+        {
+          "category": "aggressive_language_threats",
+          "explanation": "Threatening or aggressive language",
+          "confidence": 0.8
+        }
+      ],
+      "actions_taken": [
+        "safety_warning_sent",
+        "evidence_saved"
+      ]
+    }
+  ]
+}

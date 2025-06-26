@@ -1,0 +1,80 @@
+{
+  "pending_reports": [
+    {
+      "timestamp": "2025-06-25T20:20:01.075404",
+      "sender": "crypto_scammer_demo",
+      "message": "Hey gorgeous! You're absolutely perfect! I have this incredible crypto investment opportunity that will make us both millionaires. I just need you to send me $3000 today and I'll turn it into $100,000 by next week. Send it to my Bitcoin wallet: 1A2B3C4D5E6F. We're soulmates baby, trust me! What's your bank account info so I can send you the profits?",
+      "red_flags": [
+        "Potential financial scam or money request"
+      ],
+      "risk_level": "critical"
+    },
+    {
+      "timestamp": "2025-06-25T20:20:01.100697",
+      "sender": "aggressive_user_demo",
+      "message": "Why the hell aren't you responding to me? You're being a total bitch! I've been nothing but nice to you and this is how you treat me? You'll regret ignoring me. I know where you work and I'll find you.",
+      "red_flags": [
+        "Threatening or aggressive language",
+        "Threatening or aggressive language"
+      ],
+      "risk_level": "critical"
+    },
+    {
+      "timestamp": "2025-06-25T20:20:31.149368",
+      "sender": "crypto_scammer_demo",
+      "message": "Hey gorgeous! You're absolutely perfect! I have this incredible crypto investment opportunity that will make us both millionaires. I just need you to send me $3000 today and I'll turn it into $100,000 by next week. Send it to my Bitcoin wallet: 1A2B3C4D5E6F. We're soulmates baby, trust me! What's your bank account info so I can send you the profits?",
+      "red_flags": [
+        "Potential financial scam or money request"
+      ],
+      "risk_level": "critical"
+    },
+    {
+      "timestamp": "2025-06-25T20:20:31.241963",
+      "sender": "aggressive_user_demo",
+      "message": "Why the hell aren't you responding to me? You're being a total bitch! I've been nothing but nice to you and this is how you treat me? You'll regret ignoring me. I know where you work and I'll find you.",
+      "red_flags": [
+        "Threatening or aggressive language",
+        "Threatening or aggressive language"
+      ],
+      "risk_level": "critical"
+    },
+    {
+      "timestamp": "2025-06-25T20:21:01.315605",
+      "sender": "crypto_scammer_demo",
+      "message": "Hey gorgeous! You're absolutely perfect! I have this incredible crypto investment opportunity that will make us both millionaires. I just need you to send me $3000 today and I'll turn it into $100,000 by next week. Send it to my Bitcoin wallet: 1A2B3C4D5E6F. We're soulmates baby, trust me! What's your bank account info so I can send you the profits?",
+      "red_flags": [
+        "Potential financial scam or money request"
+      ],
+      "risk_level": "critical"
+    },
+    {
+      "timestamp": "2025-06-25T20:21:01.346533",
+      "sender": "aggressive_user_demo",
+      "message": "Why the hell aren't you responding to me? You're being a total bitch! I've been nothing but nice to you and this is how you treat me? You'll regret ignoring me. I know where you work and I'll find you.",
+      "red_flags": [
+        "Threatening or aggressive language",
+        "Threatening or aggressive language"
+      ],
+      "risk_level": "critical"
+    },
+    {
+      "timestamp": "2025-06-25T20:21:31.392388",
+      "sender": "crypto_scammer_demo",
+      "message": "Hey gorgeous! You're absolutely perfect! I have this incredible crypto investment opportunity that will make us both millionaires. I just need you to send me $3000 today and I'll turn it into $100,000 by next week. Send it to my Bitcoin wallet: 1A2B3C4D5E6F. We're soulmates baby, trust me! What's your bank account info so I can send you the profits?",
+      "red_flags": [
+        "Potential financial scam or money request"
+      ],
+      "risk_level": "critical"
+    },
+    {
+      "timestamp": "2025-06-25T20:21:31.425779",
+      "sender": "aggressive_user_demo",
+      "message": "Why the hell aren't you responding to me? You're being a total bitch! I've been nothing but nice to you and this is how you treat me? You'll regret ignoring me. I know where you work and I'll find you.",
+      "red_flags": [
+        "Threatening or aggressive language",
+        "Threatening or aggressive language"
+      ],
+      "risk_level": "critical"
+    }
+  ]
+}
