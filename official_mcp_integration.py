@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Red Flag Filter - Real MCP Functions Integration
-Actually uses their mcp_server.py functions
+Uses Instagram DM mcp_server.py functions
 """
 
 import sys
