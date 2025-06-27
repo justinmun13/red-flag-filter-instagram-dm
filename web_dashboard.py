@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple Red Flag Filter Dashboard
+Simple Red Flag Filter Dashboard - Updated with Privacy Protection
 No external dependencies - uses only Python built-in libraries
 """
 
@@ -72,8 +72,8 @@ class DashboardHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(stats).encode())
     
     def serve_alerts(self):
-        """Serve alerts API"""
-        alerts = self.load_alerts()
+        """Serve alerts API with deduplication and privacy protection"""
+        alerts = self.load_and_deduplicate_alerts()
         
         # Sort by timestamp (most recent first)
         try:
@@ -91,7 +91,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(recent_alerts).encode())
     
     def serve_conversations(self):
-        """Serve conversations API"""
+        """Serve conversations API with deduplication and privacy protection"""
         conversations = self.get_conversations()
         
         self.send_response(200)
@@ -149,20 +149,70 @@ class DashboardHandler(BaseHTTPRequestHandler):
         except Exception as e:
             self.send_error(500, f"Analysis error: {str(e)}")
     
-    def load_alerts(self):
-        """Load alerts from JSON file"""
+    def create_alert_key(self, alert):
+        """Create a unique key for deduplication"""
+        try:
+            # Use sender + message content + risk level as key
+            sender = alert.get('sender', 'Unknown')
+            message = alert.get('message', '')[:50]  # First 50 chars
+            risk_level = alert.get('risk_level', '')
+            
+            return f"{sender}|{message}|{risk_level}"
+        except Exception:
+            return str(hash(str(alert)))
+    
+    def load_and_deduplicate_alerts(self):
+        """Load alerts and remove duplicates while protecting privacy"""
         try:
             with open('red_flag_alerts.json', 'r') as f:
                 data = json.load(f)
-                return data.get('alerts', [])
-        except FileNotFoundError:
+                raw_alerts = data.get('alerts', [])
+        except (FileNotFoundError, json.JSONDecodeError):
             return []
-        except json.JSONDecodeError:
-            return []
+        
+        # Deduplicate alerts
+        seen_keys = set()
+        deduplicated_alerts = []
+        
+        for alert in raw_alerts:
+            # Create unique key for this alert
+            alert_key = self.create_alert_key(alert)
+            
+            if alert_key not in seen_keys:
+                seen_keys.add(alert_key)
+                
+                # Handle both old data (with real names) and new data (with nicknames)
+                sender = alert.get('sender', '')
+                if sender.startswith('@') or ' ' in sender:
+                    # Old format with real names/usernames - convert to generic nickname
+                    sender = f"Contact {len(seen_keys) + 1}"
+                elif not sender.startswith('Contact'):
+                    # Handle any other old format
+                    sender = f"Contact {len(seen_keys) + 1}"
+                
+                # Create privacy-protected version
+                protected_alert = {
+                    'timestamp': alert.get('timestamp', ''),
+                    'sender': sender,
+                    'message': alert.get('message', ''),
+                    'risk_level': alert.get('risk_level', ''),
+                    'red_flags': alert.get('red_flags', []),
+                    'recommendations': alert.get('recommendations', []),
+                    'source': alert.get('source', ''),
+                    'your_account': alert.get('your_account', '')
+                }
+                
+                deduplicated_alerts.append(protected_alert)
+        
+        return deduplicated_alerts
+    
+    def load_alerts(self):
+        """Legacy method - now calls deduplicated version"""
+        return self.load_and_deduplicate_alerts()
     
     def get_stats(self):
-        """Get statistics about alerts"""
-        alerts = self.load_alerts()
+        """Get statistics about alerts (deduplicated)"""
+        alerts = self.load_and_deduplicate_alerts()
         
         stats = {
             'total_alerts': len(alerts),
@@ -191,7 +241,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
             elif risk_level == 'low':
                 stats['low'] += 1
             
-            # Track unique senders
+            # Track unique senders (already anonymized as nicknames)
             sender = alert.get('sender', '')
             if sender:
                 stats['unique_senders'].add(sender)
@@ -210,13 +260,23 @@ class DashboardHandler(BaseHTTPRequestHandler):
         return stats
     
     def get_conversations(self):
-        """Get conversation summaries"""
-        alerts = self.load_alerts()
+        """Get conversation summaries (deduplicated and privacy-protected)"""
+        alerts = self.load_and_deduplicate_alerts()
         
-        # Group alerts by sender
+        # Group alerts by sender (handle both old and new data formats)
         conversations = {}
+        contact_counter = 1
+        
         for alert in alerts:
             sender = alert.get('sender', 'Unknown')
+            
+            # Handle old data format by converting to generic nicknames
+            if sender.startswith('@') or ' ' in sender or not sender.startswith('Contact'):
+                if sender not in conversations:
+                    # Assign a new contact number for consistency
+                    sender = f"Contact {contact_counter}"
+                    contact_counter += 1
+            
             if sender not in conversations:
                 conversations[sender] = {
                     'sender': sender,
@@ -615,6 +675,19 @@ class DashboardHandler(BaseHTTPRequestHandler):
             background: #d1ecf1;
             color: #0c5460;
         }
+        
+        .privacy-notice {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .privacy-notice strong {
+            color: #0d47a1;
+        }
     </style>
 </head>
 <body>
@@ -622,6 +695,10 @@ class DashboardHandler(BaseHTTPRequestHandler):
         <div class="header">
             <h1>Red Flag Filter Dashboard</h1>
             <p>AI-Powered Instagram DM Safety Analysis</p>
+        </div>
+        
+        <div class="privacy-notice">
+            <strong>🔒 Privacy Protected:</strong> All contacts shown as anonymous nicknames (Contact 1, Contact 2, etc.).
         </div>
         
         <div class="status">
@@ -1009,12 +1086,14 @@ def start_dashboard_server():
     print("Red Flag Filter Dashboard")
     print("=" * 50)
     print("✅ Simple dashboard with NO external dependencies!")
+    print("🔒 Privacy features: Anonymous nicknames for all contacts")
     print("📊 Dashboard URL: http://localhost:8000")
     print("🔍 Features:")
     print("   - Live message analysis")
     print("   - Real Instagram DM alerts")
     print("   - Statistics and summaries")
     print("   - Auto-refresh every 30 seconds")
+    print("   - Full privacy protection (Contact 1, Contact 2, etc.)")
     print("=" * 50)
     
     # Try to open browser automatically

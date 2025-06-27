@@ -107,8 +107,12 @@ class WorkingInstagramAnalyzer:
             
             other_user = other_users[0]
             other_username = other_user.username
+            other_full_name = getattr(other_user, 'full_name', '') or other_username
             
-            print(f"\n💬 Analyzing conversation with @{other_username}")
+            # Use full name if available, otherwise username
+            display_name = other_full_name if other_full_name.strip() else f"@{other_username}"
+            
+            print(f"\n💬 Analyzing conversation with {display_name}")
             
             # Get real messages from this conversation
             messages = self.instagram_client.direct_messages(thread.id, amount=50)
@@ -147,7 +151,7 @@ class WorkingInstagramAnalyzer:
                 analyzed_count += 1
                 
                 # Analyze text messages
-                analysis = self.analyze_message(message, other_username)
+                analysis = self.analyze_message(message, display_name)
                 
                 if analysis and isinstance(analysis, dict) and 'risk_level' in analysis:
                     if analysis['risk_level'] in [RiskLevel.MEDIUM, RiskLevel.HIGH, RiskLevel.CRITICAL]:
@@ -159,7 +163,7 @@ class WorkingInstagramAnalyzer:
                     safe_messages += 1
             
             print(f"   📊 Analysis summary:")
-            print(f"      Messages from {other_username}: {analyzed_count}")
+            print(f"      Messages from {display_name}: {analyzed_count}")
             print(f"      Your messages: {your_messages}")
             print(f"      Total in conversation: {len(messages)}")
             
@@ -187,7 +191,8 @@ class WorkingInstagramAnalyzer:
                 
                 return {
                     'other_user': other_username,
-                    'other_user_full_name': getattr(other_user, 'full_name', ''),
+                    'other_user_full_name': other_full_name,
+                    'display_name': display_name,
                     'risk_level': highest_risk,
                     'red_flag_count': len(red_flag_messages),
                     'safe_count': safe_messages,
@@ -205,8 +210,8 @@ class WorkingInstagramAnalyzer:
             print(f"   ❌ Error analyzing conversation: {e}")
             return None
     
-    def analyze_message(self, message, sender):
-        """Analyze a real Instagram message"""
+    def analyze_message(self, message, sender_display_name):
+        """Analyze a real Instagram message - only show in cmd if not low risk"""
         
         try:
             # Check if message has text
@@ -219,33 +224,31 @@ class WorkingInstagramAnalyzer:
             if not message_text:
                 return None
             
-            print(f"      📝 Analyzing: \"{message_text[:50]}{'...' if len(message_text) > 50 else ''}\"")
-            
-            # Use Red Flag Detector
+            # Use Red Flag Detector to analyze the message
             analysis = self.detector.analyze_message(message_text)
             
             # Ensure analysis is valid
             if not analysis or not isinstance(analysis, dict):
-                print(f"      ⚠️ Invalid analysis result")
                 return None
             
             # Ensure required fields exist
             if 'risk_level' not in analysis:
-                print(f"      ⚠️ Analysis missing risk_level")
                 return None
+            
+            # Only show message details in cmd if it's NOT low risk
+            if analysis['risk_level'] != RiskLevel.LOW:
+                print(f"      📝 Analyzing: \"{message_text[:50]}{'...' if len(message_text) > 50 else ''}\"")
+                risk_str = analysis['risk_level'].value if hasattr(analysis['risk_level'], 'value') else str(analysis['risk_level'])
+                print(f"      🎯 Risk: {risk_str.upper()}")
             
             # Add Instagram metadata
             analysis.update({
                 'message_id': getattr(message, 'id', 'unknown'),
-                'sender': sender,
+                'sender': sender_display_name,
                 'message_text': message_text,
                 'timestamp': getattr(message, 'timestamp', datetime.now()).isoformat(),
                 'source': 'real_instagram_dm'
             })
-            
-            # Log the result
-            risk_str = analysis['risk_level'].value if hasattr(analysis['risk_level'], 'value') else str(analysis['risk_level'])
-            print(f"      🎯 Risk: {risk_str.upper()}")
             
             return analysis
             
@@ -310,7 +313,8 @@ class WorkingInstagramAnalyzer:
             for conv in sorted(dangerous_conversations, key=lambda x: risk_order.get(x['risk_level'], 1), reverse=True):
                 risk_str = conv['risk_level'].value if hasattr(conv['risk_level'], 'value') else str(conv['risk_level'])
                 
-                print(f"   🚩 @{conv['other_user']}: {risk_str.upper()} risk")
+                # Show display name (full name if available, otherwise @username)
+                print(f"   🚩 {conv['display_name']}: {risk_str.upper()} risk")
                 print(f"      📊 {conv['red_flag_count']} red flags in {conv['total_analyzed']} messages")
                 
                 if conv['red_flag_count'] > 0:
@@ -348,7 +352,7 @@ class WorkingInstagramAnalyzer:
             for red_flag_msg in conv['red_flag_messages']:
                 alert = {
                     'timestamp': red_flag_msg.get('timestamp', datetime.now().isoformat()),
-                    'sender': f"@{conv['other_user']}",
+                    'sender': conv['display_name'],  # Use display name instead of @username
                     'message': red_flag_msg['message_text'],
                     'risk_level': red_flag_msg['risk_level'].value if hasattr(red_flag_msg['risk_level'], 'value') else str(red_flag_msg['risk_level']),
                     'red_flags': [

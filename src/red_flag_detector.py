@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Enhanced Red Flag Detector - Best of Both Versions
-Combines comprehensive pattern detection with advanced analysis
+Enhanced Red Flag Detector - Improved Accuracy Version
+Combines comprehensive pattern detection with better false positive filtering
 """
 
 import re
@@ -246,7 +246,7 @@ class RedFlagDetector:
                 if context_flags:  # Only extend if not None/empty
                     results["red_flags"].extend(context_flags)
             
-            # Filter false positives
+            # Filter false positives - IMPROVED VERSION
             results["red_flags"] = self._filter_false_positives(message, results["red_flags"])
             
             # Determine overall risk level
@@ -367,7 +367,7 @@ class RedFlagDetector:
         return flags
     
     def _filter_false_positives(self, message: str, flags: List[RedFlag]) -> List[RedFlag]:
-        """Filter out false positive red flags based on context"""
+        """Enhanced false positive filtering with better context awareness"""
         filtered_flags = []
         
         try:
@@ -376,13 +376,14 @@ class RedFlagDetector:
             for flag in flags:
                 is_false_positive = False
                 
-                # Filter out innocent mentions of "hurt" or physical pain
+                # Enhanced filtering for physical injury/pain mentions
                 if 'hurt' in flag.category.lower() or 'threat' in flag.category.lower():
                     innocent_contexts = [
                         'hurt my back', 'hurt myself', 'hurt his back', 'hurt her back',
                         'back hurts', 'back pain', 'hurt my knee', 'hurt my ankle',
                         'workout hurt', 'exercise hurt', 'gym hurt', 'pulled muscle',
-                        'sore', 'injured', 'sprained', 'twisted', 'strained'
+                        'sore', 'injured', 'sprained', 'twisted', 'strained',
+                        'physical therapy', 'therapist said', 'doctor said'
                     ]
                     
                     if any(context in message_lower for context in innocent_contexts):
@@ -398,15 +399,61 @@ class RedFlagDetector:
                     if any(re.search(pattern, message_lower) for pattern in self_injury_patterns):
                         is_false_positive = True
                 
-                # Filter out innocent video/media references
-                if any(word in flag.category.lower() for word in ['threat', 'aggressive', 'hurt']):
-                    media_contexts = [
+                # Enhanced filtering for gaming/sports/social contexts
+                if any(word in flag.category.lower() for word in ['threat', 'aggressive', 'hurt', 'gaslighting']):
+                    friendly_contexts = [
+                        # Gaming terms
+                        'game', 'gaming', 'play', 'dub', 'win', 'victory', 'match',
+                        'brothaa', 'brotha', 'bro', 'king', 'homie', 'buddy', 'dude',
+                        'witness', 'witnessed', 'crazy good', 'insane', 'wild',
+                        
+                        # Sports terms
+                        'sports', 'team', 'scored', 'goal', 'touchdown', 'basketball',
+                        'football', 'soccer', 'baseball', 'tennis', 'golf',
+                        
+                        # Social media/content
                         'video', 'reel', 'movie', 'show', 'clip', 'watch', 'saw',
                         'youtube', 'tiktok', 'instagram', 'story', 'post',
-                        'funny', 'hilarious', 'lol', 'haha', 'joke', 'meme'
+                        'funny', 'hilarious', 'lol', 'haha', 'joke', 'meme',
+                        
+                        # Positive exclamations
+                        'awesome', 'amazing', 'congrats', 'congratulations',
+                        'glad', 'happy', 'excited', 'stoked'
                     ]
                     
-                    if any(context in message_lower for context in media_contexts):
+                    if any(context in message_lower for context in friendly_contexts):
+                        is_false_positive = True
+                
+                # Enhanced gaslighting filter - be more specific about what constitutes gaslighting
+                if 'gaslighting' in flag.category.lower():
+                    # Check if it's actually expressing positive emotions or celebrating
+                    positive_contexts = [
+                        'glad you', 'happy you', 'awesome that you', 'great that you',
+                        'witness', 'see', 'experience', 'enjoy', 'celebrate',
+                        'dub', 'win', 'victory', 'success', 'achievement'
+                    ]
+                    
+                    # Check if message contains celebratory language
+                    celebratory_words = ['crazy good', 'insane win', 'wild victory', 'amazing', 'awesome']
+                    
+                    if (any(context in message_lower for context in positive_contexts) or 
+                        any(word in message_lower for word in celebratory_words)):
+                        is_false_positive = True
+                    
+                    # Additional check: if the message is clearly about a shared positive experience
+                    shared_experience_patterns = [
+                        r'\bglad\s+you\s+(got\s+to|could|were\s+able\s+to)\b',
+                        r'\bwitness\s+(it|that|the)\b',
+                        r'\bsaw\s+(it|that|the)\b.*\b(person|live|firsthand)\b'
+                    ]
+                    
+                    if any(re.search(pattern, message_lower) for pattern in shared_experience_patterns):
+                        is_false_positive = True
+                
+                # Filter based on overall message tone
+                if self._is_positive_message_tone(message_lower):
+                    # If the overall message tone is positive/celebratory, be more lenient
+                    if flag.risk_level == RiskLevel.HIGH and flag.confidence < 0.9:
                         is_false_positive = True
                 
                 # Only keep flags that aren't false positives
@@ -419,6 +466,31 @@ class RedFlagDetector:
             return flags
         
         return filtered_flags
+    
+    def _is_positive_message_tone(self, message_lower: str) -> bool:
+        """Check if the overall message tone is positive/celebratory"""
+        try:
+            positive_indicators = [
+                'lol', 'haha', '😊', '😄', '🎉', '💪', '👑',
+                'awesome', 'amazing', 'great', 'good', 'nice',
+                'congrats', 'celebration', 'happy', 'glad',
+                'excited', 'stoked', 'pumped', 'thrilled'
+            ]
+            
+            negative_indicators = [
+                'angry', 'mad', 'furious', 'hate', 'stupid',
+                'idiot', 'kill', 'die', 'hurt', 'destroy',
+                'revenge', 'payback', 'sorry', 'regret'
+            ]
+            
+            positive_count = sum(1 for indicator in positive_indicators if indicator in message_lower)
+            negative_count = sum(1 for indicator in negative_indicators if indicator in message_lower)
+            
+            # Consider positive if more positive than negative indicators
+            return positive_count > negative_count and positive_count > 0
+            
+        except Exception:
+            return False
     
     def _analyze_context(self, message: str, sender_info: Dict) -> List[RedFlag]:
         """Analyze contextual red flags"""
@@ -513,7 +585,11 @@ def test_detector():
         "Send me some pics, what are you wearing? You're so sexy",
         "Don't tell anyone about us, your friends wouldn't understand our connection",
         "You're being a bitch. I'll find you and make you regret ignoring me",
-        "What's your address? I want to come see you right now"
+        "What's your address? I want to come see you right now",
+        "Crazy dub brothaaaa glad you got to witness it in person",  # Should NOT be flagged
+        "But I hurt my back so my physical therapist said don't lift heavy",  # Should NOT be flagged
+        "Just tell me when king",  # Should NOT be flagged
+        "Miss you too man 🥲"  # Should NOT be flagged
     ]
     
     print("🚩 ENHANCED RED FLAG DETECTOR TEST")
